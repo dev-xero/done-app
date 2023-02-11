@@ -3,5 +3,6 @@
 
     <style name="Theme.DoneApp" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/status</item>
+        <item name="android:background">@color/status</item>
     </style>
 </resources>
