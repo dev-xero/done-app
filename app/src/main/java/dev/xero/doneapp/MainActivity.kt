@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -61,14 +62,19 @@ private fun DoneApp(
 		) {
 			item {
 				val focusManager = LocalFocusManager.current
+				val interactionSource = MutableInteractionSource()
 				val appUiState by appViewModel.uiState.collectAsState()
 
 				StatsBar(
 					tasksLeft = appUiState.tasksLeft,
 					modifier = Modifier
-						.clickable {
-							focusManager.clearFocus()
-						}
+						.clickable(
+							interactionSource = interactionSource,
+							indication = null,
+							onClick = {
+								focusManager.clearFocus()
+							}
+						)
 				)
 
 				TasksInputBox(
