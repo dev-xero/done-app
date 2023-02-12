@@ -83,6 +83,31 @@ private fun DoneApp(
 					focusManager = focusManager,
 					viewModel = appViewModel
 				)
+
+				if (appUiState.tasksLeft == 0) {
+					Column(
+						horizontalAlignment = Alignment.CenterHorizontally,
+						verticalArrangement = Arrangement.Center,
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(top = 32.dp)
+					) {
+						Image(
+							painter = painterResource(id = R.drawable.no_tasks_icon),
+							contentDescription = null,
+							modifier = Modifier.size(96.dp)
+						)
+
+						Text(
+							text = stringResource(id = R.string.no_tasks_left),
+							style = MaterialTheme.typography.subtitle1,
+							color = accent_2,
+							textAlign = TextAlign.Center,
+							modifier = Modifier
+								.padding(top = 8.dp)
+						)
+					}
+				}
 			}
 
 			if (appUiState.tasks.isNotEmpty()) {

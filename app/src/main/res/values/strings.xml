@@ -10,4 +10,5 @@
         thing on your list\nleft to do
     </string>
     <string name="input_label">Got anything else to do?</string>
+    <string name="no_tasks_left">NO TASKS YET</string>
 </resources>
