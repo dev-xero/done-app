@@ -242,11 +242,19 @@ private fun TasksInputBox(
 		),
 		shape = RoundedCornerShape(10.dp),
 		modifier = modifier
-			.padding(16.dp)
+			.padding(
+				top = 8.dp,
+				start = 16.dp,
+				end = 16.dp,
+				bottom = 16.dp
+			)
 			.fillMaxWidth()
 	)
 }
 
+/**
+ * Function to add a new task to the list
+ * */
 private fun addUITask(
 	task: String,
 	viewModel: AppViewModel
@@ -254,6 +262,9 @@ private fun addUITask(
 	viewModel.addTask(task)
 }
 
+/**
+ * Task Item Composable
+ * */
 @Composable
 private fun TaskItem(
 	modifier: Modifier = Modifier,
