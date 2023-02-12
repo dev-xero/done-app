@@ -29,13 +29,13 @@ val Typography = Typography(
 	h1 = TextStyle(
 		fontFamily = OutFit,
 		fontWeight = FontWeight.Bold,
-		fontSize = 96.sp
+		fontSize = 84.sp
 	),
 
 	h3 = TextStyle(
 		fontFamily = OutFit,
 		fontWeight = FontWeight.SemiBold,
-		fontSize = 24.sp
+		fontSize = 20.sp
 	),
 
 	body1 = TextStyle(

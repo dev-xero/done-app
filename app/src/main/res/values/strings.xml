@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Done</string>
     <string name="all_tasks">All tasks</string>
+    <string name="tasks_num">0%d</string>
+    <string name="tasks_num_single">%d</string>
+    <string name="things_left">
+        things on your list\nleft to do
+    </string>
 </resources>
