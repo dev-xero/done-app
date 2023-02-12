@@ -4,16 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,12 +55,33 @@ private fun DoneApp(
 		modifier = modifier,
 		topBar = { AppBar() }
 	) {
-		contentPadding -> Column(
-			modifier = modifier.padding(contentPadding)
+		contentPadding -> LazyColumn(
+			modifier = modifier
+				.padding(contentPadding)
+				.fillMaxSize()
 		) {
-			val appUiState by appViewModel.uiState.collectAsState()
+			item {
+				val focusManager = LocalFocusManager.current
+				val interactionSource = MutableInteractionSource()
+				val appUiState by appViewModel.uiState.collectAsState()
 
-			StatsBar(tasksLeft = appUiState.tasksLeft)
+				StatsBar(
+					tasksLeft = appUiState.tasksLeft,
+					modifier = Modifier
+						.clickable(
+							interactionSource = interactionSource,
+							indication = null,
+							onClick = {
+								focusManager.clearFocus()
+							}
+						)
+				)
+
+				TasksInputBox(
+					focusManager = focusManager,
+					viewModel = appViewModel
+				)
+			}
 		}
 	}
 }
@@ -118,7 +145,7 @@ private fun StatsBar(
 	Card( 
 		elevation = 0.dp,
 		backgroundColor = primary,
-		modifier = Modifier.padding(16.dp)
+		modifier = modifier.padding(16.dp)
 	) {
 		Row(
 			modifier = Modifier
@@ -153,6 +180,60 @@ private fun StatsBar(
 			)
 		}
 	}
+}
+
+/**
+ * Tasks Input Box Composable
+ * */
+@Composable
+private fun TasksInputBox(
+	modifier: Modifier = Modifier,
+	focusManager: FocusManager,
+	viewModel: AppViewModel
+) {
+	var textInput by remember {
+		mutableStateOf("")
+	}
+
+	OutlinedTextField(
+		value = textInput,
+		onValueChange = { textInput = it },
+		label = {
+			Text(
+				text = stringResource(id = R.string.input_label),
+				color = accent_2,
+				style = MaterialTheme.typography.body1
+			)
+		},
+		maxLines = 1,
+		singleLine = true,
+		keyboardActions = KeyboardActions(
+			onDone = {
+				focusManager.clearFocus()
+				addUITask(task = textInput, viewModel = viewModel)
+				textInput = ""
+			}
+		),
+		keyboardOptions = KeyboardOptions.Default.copy(
+			imeAction = ImeAction.Done
+		),
+		colors = TextFieldDefaults.outlinedTextFieldColors(
+			focusedBorderColor = primary,
+			unfocusedBorderColor = accent_2,
+			textColor = onSurface
+		),
+		shape = RoundedCornerShape(10.dp),
+		modifier = modifier
+			.padding(16.dp)
+			.fillMaxWidth()
+	)
+}
+
+private fun addUITask(
+	task: String,
+	viewModel: AppViewModel
+) {
+	viewModel.addTask(task)
 }
 
 /**
