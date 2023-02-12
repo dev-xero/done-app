@@ -78,7 +78,8 @@ private fun DoneApp(
 				)
 
 				TasksInputBox(
-					focusManager = focusManager
+					focusManager = focusManager,
+					viewModel = appViewModel
 				)
 			}
 		}
@@ -187,7 +188,8 @@ private fun StatsBar(
 @Composable
 private fun TasksInputBox(
 	modifier: Modifier = Modifier,
-	focusManager: FocusManager
+	focusManager: FocusManager,
+	viewModel: AppViewModel
 ) {
 	var textInput by remember {
 		mutableStateOf("")
@@ -206,7 +208,11 @@ private fun TasksInputBox(
 		maxLines = 1,
 		singleLine = true,
 		keyboardActions = KeyboardActions(
-			onDone = { focusManager.clearFocus() }
+			onDone = {
+				focusManager.clearFocus()
+				addUITask(task = textInput, viewModel = viewModel)
+				textInput = ""
+			}
 		),
 		keyboardOptions = KeyboardOptions.Default.copy(
 			imeAction = ImeAction.Done
@@ -221,6 +227,13 @@ private fun TasksInputBox(
 			.padding(16.dp)
 			.fillMaxWidth()
 	)
+}
+
+private fun addUITask(
+	task: String,
+	viewModel: AppViewModel
+) {
+	viewModel.addTask(task)
 }
 
 /**
