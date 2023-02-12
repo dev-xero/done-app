@@ -17,7 +17,8 @@ class AppViewModel: ViewModel() {
 			val newTasks = _uiState.value.tasks + listOf<String>(task)
 			_uiState.update {
 				currentState -> currentState.copy(
-					tasks = newTasks
+					tasks = newTasks,
+					tasksLeft = newTasks.size
 				)
 			}
 		}
