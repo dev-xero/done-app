@@ -218,7 +218,6 @@ private fun TasksInputBox(
 		label = {
 			Text(
 				text = stringResource(id = R.string.input_label),
-				color = accent_2,
 				style = MaterialTheme.typography.body1
 			)
 		},
@@ -237,7 +236,9 @@ private fun TasksInputBox(
 		colors = TextFieldDefaults.outlinedTextFieldColors(
 			focusedBorderColor = primary,
 			unfocusedBorderColor = accent_2,
-			textColor = onSurface
+			textColor = onSurface,
+			focusedLabelColor = primary,
+			unfocusedLabelColor = accent_2
 		),
 		shape = RoundedCornerShape(10.dp),
 		modifier = modifier
