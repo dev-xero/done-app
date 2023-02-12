@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +14,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,11 +60,20 @@ private fun DoneApp(
 				.fillMaxSize()
 		) {
 			item {
+				val focusManager = LocalFocusManager.current
 				val appUiState by appViewModel.uiState.collectAsState()
 
-				StatsBar(tasksLeft = appUiState.tasksLeft)
+				StatsBar(
+					tasksLeft = appUiState.tasksLeft,
+					modifier = Modifier
+						.clickable {
+							focusManager.clearFocus()
+						}
+				)
 
-				TasksInputBox()
+				TasksInputBox(
+					focusManager = focusManager
+				)
 			}
 		}
 	}
@@ -169,12 +180,13 @@ private fun StatsBar(
  * */
 @Composable
 private fun TasksInputBox(
-	modifier: Modifier = Modifier
+	modifier: Modifier = Modifier,
+	focusManager: FocusManager
 ) {
 	var textInput by remember {
 		mutableStateOf("")
 	}
-	val focusManager = LocalFocusManager.current
+
 	OutlinedTextField(
 		value = textInput,
 		onValueChange = { textInput = it },
