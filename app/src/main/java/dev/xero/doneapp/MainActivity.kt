@@ -260,9 +260,12 @@ private fun TaskItem(
 ) {
 	Card(
 		elevation = 0.dp,
-		shape = RoundedCornerShape(0.dp),
+		shape = RoundedCornerShape(10.dp),
 		backgroundColor = accent_1,
 		modifier = modifier
+			.padding(
+				horizontal = 16.dp
+			)
 	) {
 		Row(
 			modifier = Modifier
