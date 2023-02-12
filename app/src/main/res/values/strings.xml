@@ -6,5 +6,8 @@
     <string name="things_left">
         things on your list\nleft to do
     </string>
+    <string name="things_left_singular">
+        thing on your list\nleft to do
+    </string>
     <string name="input_label">Got anything else to do?</string>
 </resources>

@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -51,6 +52,10 @@ private fun DoneApp(
 	modifier: Modifier = Modifier,
 	appViewModel: AppViewModel = viewModel()
 ) {
+	val focusManager = LocalFocusManager.current
+	val interactionSource = MutableInteractionSource()
+	val appUiState by appViewModel.uiState.collectAsState()
+
 	Scaffold(
 		modifier = modifier,
 		topBar = { AppBar() }
@@ -61,9 +66,6 @@ private fun DoneApp(
 				.fillMaxSize()
 		) {
 			item {
-				val focusManager = LocalFocusManager.current
-				val interactionSource = MutableInteractionSource()
-				val appUiState by appViewModel.uiState.collectAsState()
 
 				StatsBar(
 					tasksLeft = appUiState.tasksLeft,
@@ -81,6 +83,15 @@ private fun DoneApp(
 					focusManager = focusManager,
 					viewModel = appViewModel
 				)
+			}
+
+			if (appUiState.tasks.isNotEmpty()) {
+				items(appUiState.tasks) {
+					task -> TaskItem(
+						task = task,
+						modifier = Modifier.padding(bottom = 8.dp)
+					)
+				}
 			}
 		}
 	}
@@ -158,6 +169,12 @@ private fun StatsBar(
 				stringResource(id = R.string.tasks_num, tasksLeft)
 			else
 				stringResource(id = R.string.tasks_num_single, tasksLeft)
+
+			val textDisplay = if (tasksLeft == 1)
+				stringResource(id = R.string.things_left_singular)
+			else
+				stringResource(id = R.string.things_left)
+
 			Text(
 				text = tasksNum,
 				style = MaterialTheme.typography.h1,
@@ -170,7 +187,7 @@ private fun StatsBar(
 			)
 
 			Text(
-				text = stringResource(id = R.string.things_left),
+				text = textDisplay,
 				style = MaterialTheme.typography.h3,
 				color = secondary,
 				modifier = Modifier
@@ -234,6 +251,36 @@ private fun addUITask(
 	viewModel: AppViewModel
 ) {
 	viewModel.addTask(task)
+}
+
+@Composable
+private fun TaskItem(
+	modifier: Modifier = Modifier,
+	task: String
+) {
+	Card(
+		elevation = 0.dp,
+		shape = RoundedCornerShape(10.dp),
+		backgroundColor = accent_1 ,
+		modifier = modifier
+			.padding(
+				horizontal = 16.dp
+			)
+	) {
+		Row(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(12.dp),
+		) {
+			Text(
+				text = task,
+				style = MaterialTheme.typography.body1,
+				color = onSurface,
+				modifier = Modifier
+					.padding(8.dp)
+			)
+		}
+	}
 }
 
 /**
