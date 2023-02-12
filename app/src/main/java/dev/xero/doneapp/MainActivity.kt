@@ -261,7 +261,7 @@ private fun TaskItem(
 	Card(
 		elevation = 0.dp,
 		shape = RoundedCornerShape(10.dp),
-		backgroundColor = accent_1,
+		backgroundColor = accent_1 ,
 		modifier = modifier
 			.padding(
 				horizontal = 16.dp
@@ -275,7 +275,9 @@ private fun TaskItem(
 			Text(
 				text = task,
 				style = MaterialTheme.typography.body1,
-				color = onSurface
+				color = onSurface,
+				modifier = Modifier
+					.padding(8.dp)
 			)
 		}
 	}
