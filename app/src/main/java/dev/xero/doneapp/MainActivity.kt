@@ -1,6 +1,7 @@
 package dev.xero.doneapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -115,7 +116,9 @@ private fun DoneApp(
 			if (appUiState.tasks.isNotEmpty()) {
 				items(appUiState.tasks) {
 					task -> TaskItem(
-						task = task,
+						task = task["task"]!!,
+						id = task["id"]!!,
+						viewModel = appViewModel,
 						modifier = Modifier.padding(bottom = 8.dp)
 					)
 				}
@@ -295,7 +298,9 @@ private fun addUITask(
 @Composable
 private fun TaskItem(
 	modifier: Modifier = Modifier,
-	task: String
+	task: String,
+	id: String,
+	viewModel: AppViewModel
 ) {
 	Card(
 		elevation = 0.dp,
@@ -318,7 +323,11 @@ private fun TaskItem(
 
 			Checkbox(
 				checked = checkState,
-				onCheckedChange = { checkState = it },
+				onCheckedChange = {
+					checkState = it
+					Log.d("AppViewModel", id)
+					viewModel.checkTask(id = id)
+				},
 				colors = CheckboxDefaults.colors(
 					checkedColor = primary,
 					uncheckedColor = accent_2,
