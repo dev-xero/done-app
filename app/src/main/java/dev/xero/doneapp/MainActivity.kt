@@ -371,7 +371,8 @@ private fun TaskItem(
 					color = if (checkState) accent_2 else onSurface,
 					fontSize = 16.sp,
 					modifier = Modifier.padding(
-						start = 2.dp
+						start = 2.dp,
+						end = 20.dp
 					),
 					textDecoration = if (checkState)
 						TextDecoration.LineThrough

@@ -9,6 +9,7 @@
 /.idea/assetWizardSettings.xml
 /app/src/androidTest
 /app/src/test
+/app/release
 .DS_Store
 /build
 /captures
