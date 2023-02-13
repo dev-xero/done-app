@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -307,7 +308,8 @@ private fun TaskItem(
 	) {
 		Row(
 			modifier = Modifier
-				.fillMaxWidth(),
+				.fillMaxWidth()
+				.padding(vertical = 4.dp),
 			verticalAlignment = Alignment.CenterVertically
 		) {
 			var checkState by remember {
@@ -323,22 +325,22 @@ private fun TaskItem(
 					checkmarkColor = onSurface
 				),
 				modifier = Modifier.padding(
-					top = 4.dp,
-					start = 8.dp,
-					bottom = 4.dp
+					start = 8.dp
 				)
 			)
 
 			Text(
 				text = task,
 				style = MaterialTheme.typography.body1,
-				color = onSurface,
+				color = if (checkState) accent_2 else onSurface,
 				fontSize = 16.sp,
 				modifier = Modifier.padding(
-					start = 2.dp,
-					top = 4.dp,
-					bottom = 4.dp
-				)
+					start = 2.dp
+				),
+				textDecoration = if (checkState)
+					TextDecoration.LineThrough
+				else
+					TextDecoration.None
 			)
 		}
 	}
