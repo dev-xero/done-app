@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.xero.doneapp.ui.AppViewModel
 import dev.xero.doneapp.ui.theme.*
@@ -306,15 +307,38 @@ private fun TaskItem(
 	) {
 		Row(
 			modifier = Modifier
-				.fillMaxWidth()
-				.padding(12.dp),
+				.fillMaxWidth(),
+			verticalAlignment = Alignment.CenterVertically
 		) {
+			var checkState by remember {
+				mutableStateOf(false)
+			}
+
+			Checkbox(
+				checked = checkState,
+				onCheckedChange = { checkState = it },
+				colors = CheckboxDefaults.colors(
+					checkedColor = primary,
+					uncheckedColor = accent_2,
+					checkmarkColor = onSurface
+				),
+				modifier = Modifier.padding(
+					top = 4.dp,
+					start = 8.dp,
+					bottom = 4.dp
+				)
+			)
+
 			Text(
 				text = task,
 				style = MaterialTheme.typography.body1,
 				color = onSurface,
-				modifier = Modifier
-					.padding(8.dp)
+				fontSize = 16.sp,
+				modifier = Modifier.padding(
+					start = 2.dp,
+					top = 4.dp,
+					bottom = 4.dp
+				)
 			)
 		}
 	}
