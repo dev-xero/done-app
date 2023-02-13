@@ -1,10 +1,10 @@
 package dev.xero.doneapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,6 +31,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.xero.doneapp.ui.AppViewModel
 import dev.xero.doneapp.ui.theme.*
+import me.saket.swipe.SwipeAction
+import me.saket.swipe.SwipeableActionsBox
 
 class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,7 +96,9 @@ private fun DoneApp(
 						verticalArrangement = Arrangement.Center,
 						modifier = Modifier
 							.fillMaxWidth()
-							.padding(top = 32.dp)
+							.padding(
+								vertical = 32.dp
+							)
 					) {
 						Image(
 							painter = painterResource(id = R.drawable.no_tasks_icon),
@@ -305,52 +310,75 @@ private fun TaskItem(
 	Card(
 		elevation = 0.dp,
 		shape = RoundedCornerShape(10.dp),
-		backgroundColor = accent_1 ,
+		backgroundColor = accent_1,
 		modifier = modifier
 			.padding(
 				horizontal = 16.dp
 			)
-	) {
-		Row(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(vertical = 4.dp),
-			verticalAlignment = Alignment.CenterVertically
-		) {
-			var checkState by remember {
-				mutableStateOf(false)
-			}
-
-			Checkbox(
-				checked = checkState,
-				onCheckedChange = {
-					checkState = it
-					Log.d("AppViewModel", id)
-					viewModel.checkTask(id = id)
-				},
-				colors = CheckboxDefaults.colors(
-					checkedColor = primary,
-					uncheckedColor = accent_2,
-					checkmarkColor = onSurface
-				),
-				modifier = Modifier.padding(
-					start = 8.dp
+		)
+	{
+		val delete = SwipeAction(
+			onSwipe = {
+					viewModel.checkTask(id)
+			},
+			icon = {
+				Icon(
+					painter = painterResource(id = R.drawable.trash_icon),
+					contentDescription = null,
+					tint = onSurface,
+					modifier = Modifier
+						.padding(16.dp)
 				)
-			)
+			},
+			background = Color(0xFFF33854)
+		)
 
-			Text(
-				text = task,
-				style = MaterialTheme.typography.body1,
-				color = if (checkState) accent_2 else onSurface,
-				fontSize = 16.sp,
-				modifier = Modifier.padding(
-					start = 2.dp
-				),
-				textDecoration = if (checkState)
-					TextDecoration.LineThrough
-				else
-					TextDecoration.None
-			)
+		SwipeableActionsBox(
+			endActions = listOf(delete),
+			backgroundUntilSwipeThreshold = Color(0xFF0B0F14),
+			swipeThreshold = 120.dp
+		) {
+			Row(
+				modifier = Modifier
+					.fillMaxWidth()
+					.background(color = accent_1),
+				verticalAlignment = Alignment.CenterVertically
+			) {
+				var checkState by remember {
+					mutableStateOf(false)
+				}
+
+				Checkbox(
+					checked = checkState,
+					onCheckedChange = {
+						checkState = it
+					},
+					colors = CheckboxDefaults.colors(
+						checkedColor = primary,
+						uncheckedColor = accent_2,
+						checkmarkColor = onSurface
+					),
+					modifier = Modifier.padding(
+						start = 8.dp,
+						top = 8.dp,
+						bottom = 8.dp
+					)
+				)
+
+				Text(
+					text = task,
+					style = MaterialTheme.typography.body1,
+					color = if (checkState) accent_2 else onSurface,
+					fontSize = 16.sp,
+					modifier = Modifier.padding(
+						start = 2.dp
+					),
+					textDecoration = if (checkState)
+						TextDecoration.LineThrough
+					else
+						TextDecoration.None
+				)
+			}
 		}
 	}
 }
