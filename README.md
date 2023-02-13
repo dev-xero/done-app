@@ -37,7 +37,7 @@ Done, manage your daily tasks with ease — efficiently.
 ## ✅ Downloads
 ![GitHub release](https://img.shields.io/github/downloads/dev-xero/done-app/v1.0.0/total?color=3ddc84&label=Download%20app&logo=android&style=for-the-badge)
 
-Requires **android 70.0** and up (API Level 24)
+Requires **android 7.0** and up (API Level 24)
 
 <details>
   <summary> Steps </summary>
