@@ -8,38 +8,74 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.util.UUID
 
+private const val TAG = "AppViewModel"
+
 class AppViewModel: ViewModel() {
-	private val _uiState = MutableStateFlow(AppUiState())
+	private val _uiState = MutableStateFlow(AppUiState(tasksList = mutableListOf()))
 	val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
-	private val TAG = "AppViewModel"
+
+	fun getCheckedStateOf(id: String): String {
+		return _uiState.value.tasksList.find {
+			it["id"] == id
+		}!!["checked"]!!
+	}
+
+	private fun checkTasksLeft(currentState: MutableList<MutableMap<String, String>>): Int {
+		return currentState.count {
+			it["checked"] == "false"
+		}
+	}
 
 	fun addTask(task: String) {
-		if (task.isNotBlank()) {
-			val newTask: Map<String, String> = mapOf(
-				"id" to UUID.randomUUID().toString(),
-				"task" to task
+		val newID = UUID.randomUUID().toString()
+
+		val newTaskItem = mutableMapOf(
+			"id" to newID,
+			"task" to task,
+			"checked" to "false"
+		)
+
+		val newTempState = _uiState.value.tasksList.toMutableList()
+
+		newTempState.add(newTaskItem)
+
+		val tasksLeft = checkTasksLeft(currentState = newTempState)
+
+		// UPDATE THE STATE
+		_uiState.update {
+			currentState -> currentState.copy(
+				tasksList = newTempState,
+				tasksLeft = tasksLeft
 			)
-			val newList = uiState.value.tasks + newTask
-			_uiState.update {
-				currentState -> currentState.copy(
-					tasks = newList,
-					tasksLeft = newList.size
-				)
-			}
 		}
-		Log.d(TAG, _uiState.value.tasks.toString())
+
+		// DEBUGGING
+		Log.d(TAG, _uiState.value.tasksList.toString())
+
 	}
 
 	fun checkTask(id: String) {
-		val newList = _uiState.value.tasks.filter {
-			it["id"].toString() != id
-		}
+		val newTempState = _uiState.value.tasksList.toMutableList()
+		val newCheckedState = if(newTempState.find { it["id"] == id }!!["checked"] == "true") "false" else "true"
+
+		newTempState.find { it["id"] == id }!!["checked"] = newCheckedState
+
+		val tasksLeft = checkTasksLeft(currentState = newTempState)
+
+		// UPDATE THE STATE
 		_uiState.update {
 			currentState -> currentState.copy(
-				tasks = newList,
-				tasksLeft = newList.size
+				tasksList = newTempState,
+				tasksLeft = tasksLeft
 			)
 		}
-		Log.d(TAG, _uiState.value.tasks.toString())
+
+
+		// DEBUGGING
+		Log.d(TAG, _uiState.value.tasksList.toString())
+
 	}
+
+
+
 }

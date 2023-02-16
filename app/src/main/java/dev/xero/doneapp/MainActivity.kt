@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -90,7 +91,7 @@ private fun DoneApp(
 					viewModel = appViewModel
 				)
 
-				if (appUiState.tasksLeft == 0) {
+				if (appUiState.tasksList.isEmpty()) {
 					Column(
 						horizontalAlignment = Alignment.CenterHorizontally,
 						verticalArrangement = Arrangement.Center,
@@ -118,11 +119,12 @@ private fun DoneApp(
 				}
 			}
 
-			if (appUiState.tasks.isNotEmpty()) {
-				items(appUiState.tasks) {
+			if (appUiState.tasksList.isNotEmpty()) {
+				items(appUiState.tasksList) {
 					task -> TaskItem(
 						task = task["task"]!!,
 						id = task["id"]!!,
+						checked = task["checked"]!!.toBoolean(),
 						viewModel = appViewModel,
 						modifier = Modifier.padding(bottom = 8.dp)
 					)
@@ -243,7 +245,7 @@ private fun TasksInputBox(
 	focusManager: FocusManager,
 	viewModel: AppViewModel
 ) {
-	var textInput by remember {
+	var textInput by rememberSaveable {
 		mutableStateOf("")
 	}
 
@@ -305,6 +307,7 @@ private fun TaskItem(
 	modifier: Modifier = Modifier,
 	task: String,
 	id: String,
+	checked: Boolean,
 	viewModel: AppViewModel
 ) {
 	Card(
@@ -318,9 +321,7 @@ private fun TaskItem(
 		)
 	{
 		val delete = SwipeAction(
-			onSwipe = {
-					viewModel.checkTask(id)
-			},
+			onSwipe = { /*TODO: Implement delete function */},
 			icon = {
 				Icon(
 					painter = painterResource(id = R.drawable.trash_icon),
@@ -344,14 +345,15 @@ private fun TaskItem(
 					.background(color = accent_1),
 				verticalAlignment = Alignment.CenterVertically
 			) {
-				var checkState by remember {
-					mutableStateOf(false)
+				var checkState by rememberSaveable {
+					mutableStateOf(checked)
 				}
 
 				Checkbox(
 					checked = checkState,
 					onCheckedChange = {
-						checkState = it
+						viewModel.checkTask(id)
+						checkState = viewModel.getCheckedStateOf(id = id).toBoolean()
 					},
 					colors = CheckboxDefaults.colors(
 						checkedColor = primary,
