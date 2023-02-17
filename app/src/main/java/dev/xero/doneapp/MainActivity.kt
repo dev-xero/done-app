@@ -343,7 +343,8 @@ private fun TaskItem(
 			Row(
 				modifier = Modifier
 					.fillMaxWidth()
-					.background(color = accent_1),
+					.background(color = accent_1)
+					.padding(vertical = 8.dp),
 				verticalAlignment = Alignment.CenterVertically
 			) {
 				var checkState by rememberSaveable {
