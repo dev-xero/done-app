@@ -11,19 +11,20 @@ import java.util.UUID
 private const val TAG = "AppViewModel"
 
 class AppViewModel: ViewModel() {
-	private val _uiState = MutableStateFlow(AppUiState(tasksList = mutableListOf()))
+	private val _uiState = MutableStateFlow(AppUiState())
 	val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
-
-	fun getCheckedStateOf(id: String): String {
-		return _uiState.value.tasksList.find {
-			it["id"] == id
-		}!!["checked"]!!
-	}
 
 	private fun checkTasksLeft(currentState: MutableList<MutableMap<String, String>>): Int {
 		return currentState.count {
 			it["checked"] == "false"
 		}
+	}
+
+	fun getCheckedStateOf(id: String): String {
+		Log.d(TAG, id)
+		return _uiState.value.tasksList.find {
+			it["id"] == id
+		}?.get("checked") ?: "false"
 	}
 
 	fun addTask(task: String) {
@@ -36,14 +37,13 @@ class AppViewModel: ViewModel() {
 		)
 
 		val newTempState = _uiState.value.tasksList.toMutableList()
-
 		newTempState.add(newTaskItem)
 
 		val tasksLeft = checkTasksLeft(currentState = newTempState)
 
 		// UPDATE THE STATE
 		_uiState.update {
-			currentState -> currentState.copy(
+			it.copy(
 				tasksList = newTempState,
 				tasksLeft = tasksLeft
 			)
@@ -56,15 +56,15 @@ class AppViewModel: ViewModel() {
 
 	fun checkTask(id: String) {
 		val newTempState = _uiState.value.tasksList.toMutableList()
-		val newCheckedState = if(newTempState.find { it["id"] == id }!!["checked"] == "true") "false" else "true"
-
-		newTempState.find { it["id"] == id }!!["checked"] = newCheckedState
+		val task = newTempState.firstOrNull { it["id"] == id }
+		val newCheckedState = if (task?.get("checked") == "true") "false" else "true"
+		task?.set("checked", newCheckedState)
 
 		val tasksLeft = checkTasksLeft(currentState = newTempState)
 
 		// UPDATE THE STATE
 		_uiState.update {
-			currentState -> currentState.copy(
+			it.copy(
 				tasksList = newTempState,
 				tasksLeft = tasksLeft
 			)
@@ -76,6 +76,25 @@ class AppViewModel: ViewModel() {
 
 	}
 
+	fun deleteTask(id: String) {
+		val newTempState = _uiState.value.tasksList.filterNot {
+			it["id"] == id
+		}.toMutableList()
 
+		val tasksLeft = checkTasksLeft(currentState = newTempState)
+
+		// UPDATE THE STATE
+		_uiState.update {
+			it.copy(
+				tasksList = newTempState,
+				tasksLeft = tasksLeft
+			)
+		}
+
+		// DEBUGGING
+		Log.d(TAG, _uiState.value.tasksList.toString())
+		Log.d(TAG, _uiState.value.tasksLeft.toString())
+
+	}
 
 }

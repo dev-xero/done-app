@@ -124,7 +124,6 @@ private fun DoneApp(
 					task -> TaskItem(
 						task = task["task"]!!,
 						id = task["id"]!!,
-						checked = task["checked"]!!.toBoolean(),
 						viewModel = appViewModel,
 						modifier = Modifier.padding(bottom = 8.dp)
 					)
@@ -307,9 +306,9 @@ private fun TaskItem(
 	modifier: Modifier = Modifier,
 	task: String,
 	id: String,
-	checked: Boolean,
 	viewModel: AppViewModel
 ) {
+
 	Card(
 		elevation = 0.dp,
 		shape = RoundedCornerShape(10.dp),
@@ -321,7 +320,9 @@ private fun TaskItem(
 		)
 	{
 		val delete = SwipeAction(
-			onSwipe = { /*TODO: Implement delete function */},
+			onSwipe = {
+				viewModel.deleteTask(id = id)
+			},
 			icon = {
 				Icon(
 					painter = painterResource(id = R.drawable.trash_icon),
@@ -346,7 +347,7 @@ private fun TaskItem(
 				verticalAlignment = Alignment.CenterVertically
 			) {
 				var checkState by rememberSaveable {
-					mutableStateOf(checked)
+					mutableStateOf(false)
 				}
 
 				Checkbox(
