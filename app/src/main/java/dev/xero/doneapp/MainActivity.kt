@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -29,10 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.xero.doneapp.model.TaskItem
 import dev.xero.doneapp.ui.AppViewModel
 import dev.xero.doneapp.ui.theme.*
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
+import java.util.*
 
 class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +93,7 @@ private fun DoneApp(
 					viewModel = appViewModel
 				)
 
-				if (appUiState.tasksLeft == 0) {
+				if (appUiState.tasksList.isEmpty()) {
 					Column(
 						horizontalAlignment = Alignment.CenterHorizontally,
 						verticalArrangement = Arrangement.Center,
@@ -118,11 +121,10 @@ private fun DoneApp(
 				}
 			}
 
-			if (appUiState.tasks.isNotEmpty()) {
-				items(appUiState.tasks) {
-					task -> TaskItem(
-						task = task["task"]!!,
-						id = task["id"]!!,
+			if (appUiState.tasksList.isNotEmpty()) {
+				items(appUiState.tasksList) {
+					task -> TaskItemComposable(
+						task = task,
 						viewModel = appViewModel,
 						modifier = Modifier.padding(bottom = 8.dp)
 					)
@@ -243,7 +245,7 @@ private fun TasksInputBox(
 	focusManager: FocusManager,
 	viewModel: AppViewModel
 ) {
-	var textInput by remember {
+	var textInput by rememberSaveable {
 		mutableStateOf("")
 	}
 
@@ -301,12 +303,12 @@ private fun addUITask(
  * Task Item Composable
  * */
 @Composable
-private fun TaskItem(
+private fun TaskItemComposable(
 	modifier: Modifier = Modifier,
-	task: String,
-	id: String,
+	task: TaskItem,
 	viewModel: AppViewModel
 ) {
+
 	Card(
 		elevation = 0.dp,
 		shape = RoundedCornerShape(10.dp),
@@ -319,7 +321,7 @@ private fun TaskItem(
 	{
 		val delete = SwipeAction(
 			onSwipe = {
-					viewModel.checkTask(id)
+				 viewModel.deleteTask(id = task.id)
 			},
 			icon = {
 				Icon(
@@ -341,16 +343,14 @@ private fun TaskItem(
 			Row(
 				modifier = Modifier
 					.fillMaxWidth()
-					.background(color = accent_1),
-				verticalAlignment = Alignment.CenterVertically
+					.background(color = accent_1)
 			) {
-				var checkState by remember {
-					mutableStateOf(false)
-				}
+				var checkState = task.checked
 
 				Checkbox(
 					checked = checkState,
 					onCheckedChange = {
+						viewModel.checkTask(id = task.id)
 						checkState = it
 					},
 					colors = CheckboxDefaults.colors(
@@ -358,26 +358,25 @@ private fun TaskItem(
 						uncheckedColor = accent_2,
 						checkmarkColor = onSurface
 					),
-					modifier = Modifier.padding(
-						start = 8.dp,
-						top = 8.dp,
-						bottom = 8.dp
-					)
+					modifier = Modifier
+						.wrapContentWidth()
+						.wrapContentHeight()
 				)
 
 				Text(
-					text = task,
+					text = task.task,
 					style = MaterialTheme.typography.body1,
 					color = if (checkState) accent_2 else onSurface,
 					fontSize = 16.sp,
-					modifier = Modifier.padding(
-						start = 2.dp,
-						end = 20.dp
-					),
 					textDecoration = if (checkState)
 						TextDecoration.LineThrough
 					else
-						TextDecoration.None
+						TextDecoration.None,
+					modifier = Modifier.padding(
+						top = 12.dp,
+						end = 12.dp,
+						bottom = 12.dp
+					)
 				)
 			}
 		}
@@ -392,5 +391,17 @@ private fun TaskItem(
 private fun DoneAppPreview() {
 	DoneAppTheme {
 		DoneApp()
+	}
+}
+
+@Preview
+@Composable
+private fun TaskItemPreview() {
+	DoneAppTheme {
+		TaskItemComposable(task = TaskItem(
+			id = UUID.randomUUID(),
+			task = "lol hahahahhsdfkasfasfpas fasdfkaspdf asfdjkkdsa dak sdfpas fasfkaspldf asdfkasdfa skdfas asfdal;sjf asf",
+			checked = false
+		), viewModel = viewModel())
 	}
 }

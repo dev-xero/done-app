@@ -1,6 +1,8 @@
 package dev.xero.doneapp.ui
 
+import dev.xero.doneapp.model.TaskItem
+
 data class AppUiState (
-	var tasks: List<Map<String, String>> = mutableListOf<Map<String, String>>(),
+	var tasksList: List<TaskItem> = emptyList(),
 	var tasksLeft: Int = 0
 )
