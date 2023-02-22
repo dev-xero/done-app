@@ -346,8 +346,8 @@ private fun TaskItemComposable(
 					.padding(vertical = 8.dp),
 				verticalAlignment = Alignment.CenterVertically
 			) {
-				var checkState by rememberSaveable {
-					mutableStateOf(task.checked)
+				var checkState by remember {
+					mutableStateOf(false)
 				}
 
 				Checkbox(
