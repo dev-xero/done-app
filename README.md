@@ -35,14 +35,14 @@ Done, manage your daily tasks with ease — efficiently.
 </table>
 
 ## ✅ Downloads
-[![GitHub release](https://img.shields.io/github/downloads/dev-xero/done-app/v1.0.0/total?color=3ddc84&label=Downloads&logo=android&style=for-the-badge)](https://github.com/dev-xero/done-app/releases/tag/v1.0.0)
+[![GitHub release](https://img.shields.io/github/downloads/dev-xero/done-app/total?color=3ddc84&label=Downloads&logo=android&style=for-the-badge)](https://github.com/dev-xero/done-app/releases/tag/v1.0.2)
 
 Requires **android 7.0** and up (API Level 24)
 
 <details>
   <summary> Steps </summary>
   
-  1. [Download the app](https://github.com/dev-xero/done-app/releases/tag/v1.0.0) by clicking the green button or this link.
+  1. [Download the app](https://github.com/dev-xero/done-app/releases/tag/v1.0.2) by clicking the green button or this link.
   2. Locate the file and install, you might get a warning, that's because the app isn't from the playstore, but it's safe to accept.
   3. After installing, you should be able to use the app.
 </details>
