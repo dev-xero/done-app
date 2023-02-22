@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.xero.doneapp.model.TaskItem
 import dev.xero.doneapp.ui.AppViewModel
 import dev.xero.doneapp.ui.theme.*
 import me.saket.swipe.SwipeAction
@@ -121,9 +122,8 @@ private fun DoneApp(
 
 			if (appUiState.tasksList.isNotEmpty()) {
 				items(appUiState.tasksList) {
-					task -> TaskItem(
-						task = task["task"]!!,
-						id = task["id"]!!,
+					task -> TaskItemComposable(
+						task = task,
 						viewModel = appViewModel,
 						modifier = Modifier.padding(bottom = 8.dp)
 					)
@@ -302,10 +302,9 @@ private fun addUITask(
  * Task Item Composable
  * */
 @Composable
-private fun TaskItem(
+private fun TaskItemComposable(
 	modifier: Modifier = Modifier,
-	task: String,
-	id: String,
+	task: TaskItem,
 	viewModel: AppViewModel
 ) {
 
@@ -321,7 +320,7 @@ private fun TaskItem(
 	{
 		val delete = SwipeAction(
 			onSwipe = {
-				viewModel.deleteTask(id = id)
+				// viewModel.deleteTask(id = task.id)
 			},
 			icon = {
 				Icon(
@@ -353,10 +352,7 @@ private fun TaskItem(
 
 				Checkbox(
 					checked = checkState,
-					onCheckedChange = {
-						viewModel.checkTask(id)
-						checkState = viewModel.getCheckedStateOf(id = id).toBoolean()
-					},
+					onCheckedChange = {/*TODO*/},
 					colors = CheckboxDefaults.colors(
 						checkedColor = primary,
 						uncheckedColor = accent_2,
@@ -370,7 +366,7 @@ private fun TaskItem(
 				)
 
 				Text(
-					text = task,
+					text = task.task,
 					style = MaterialTheme.typography.body1,
 					color = if (checkState) accent_2 else onSurface,
 					fontSize = 16.sp,
