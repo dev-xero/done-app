@@ -346,15 +346,13 @@ private fun TaskItemComposable(
 					.padding(vertical = 8.dp),
 				verticalAlignment = Alignment.CenterVertically
 			) {
-				var checkState by remember {
-					mutableStateOf(false)
-				}
+				var checkState = task.checked
 
 				Checkbox(
 					checked = checkState,
 					onCheckedChange = {
 						viewModel.checkTask(id = task.id)
-						checkState = task.checked
+						checkState = it
 					},
 					colors = CheckboxDefaults.colors(
 						checkedColor = primary,

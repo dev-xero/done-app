@@ -11,7 +11,7 @@ import java.util.UUID
 
 private const val TAG = "AppViewModel"
 
-class AppViewModel: ViewModel() {
+class AppViewModel : ViewModel() {
 	private val _uiState = MutableStateFlow(AppUiState())
 	val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
