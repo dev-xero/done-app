@@ -320,7 +320,7 @@ private fun TaskItemComposable(
 	{
 		val delete = SwipeAction(
 			onSwipe = {
-				// viewModel.deleteTask(id = task.id)
+				 viewModel.deleteTask(id = task.id)
 			},
 			icon = {
 				Icon(
@@ -347,12 +347,15 @@ private fun TaskItemComposable(
 				verticalAlignment = Alignment.CenterVertically
 			) {
 				var checkState by rememberSaveable {
-					mutableStateOf(false)
+					mutableStateOf(task.checked)
 				}
 
 				Checkbox(
 					checked = checkState,
-					onCheckedChange = {/*TODO*/},
+					onCheckedChange = {
+						viewModel.checkTask(id = task.id)
+						checkState = task.checked
+					},
 					colors = CheckboxDefaults.colors(
 						checkedColor = primary,
 						uncheckedColor = accent_2,

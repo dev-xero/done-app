@@ -5,5 +5,5 @@ import java.util.*
 data class TaskItem(
 	val id: UUID,
 	val task: String,
-	val checked: Boolean = false
+	var checked: Boolean = false
 )

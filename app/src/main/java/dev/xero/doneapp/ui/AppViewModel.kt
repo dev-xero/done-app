@@ -15,6 +15,16 @@ class AppViewModel: ViewModel() {
 	private val _uiState = MutableStateFlow(AppUiState())
 	val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
+	private fun getTasksLeft(tasksList: MutableList<TaskItem>): Int {
+		var tasksLeft = 0
+		tasksList.forEach {
+			if (!it.checked) {
+				tasksLeft += 1
+			}
+		}
+		return tasksLeft
+	}
+
 	fun addTask(taskString: String) {
 		val tasksList: MutableList<TaskItem> = _uiState.value.tasksList.toMutableList()
 		tasksList.add(TaskItem(
@@ -22,10 +32,51 @@ class AppViewModel: ViewModel() {
 			task = taskString,
 			checked = false
 		))
+		val tasksLeft = getTasksLeft(tasksList)
+
 		_uiState.update {
 			it.copy (
-				tasksList = tasksList
+				tasksList = tasksList,
+				tasksLeft = tasksLeft
 			)
 		}
+
+		Log.d(TAG, _uiState.value.tasksList.toString())
+	}
+
+	fun checkTask(id: UUID) {
+		val tasksList: MutableList<TaskItem> = _uiState.value.tasksList.toMutableList()
+		tasksList.forEach {
+			if (it.id == id) {
+				it.checked = !it.checked
+			}
+		}
+
+		val tasksLeft = getTasksLeft(tasksList)
+
+		_uiState.update {
+			it.copy(
+				tasksList = tasksList,
+				tasksLeft = tasksLeft
+			)
+		}
+
+		Log.d(TAG, tasksList.toString())
+	}
+
+	fun deleteTask(id: UUID) {
+		val tasksList: MutableList<TaskItem> = _uiState.value.tasksList.toMutableList()
+		tasksList.remove(tasksList.find { it.id == id})
+
+		val tasksLeft = getTasksLeft(tasksList)
+
+		_uiState.update {
+			it.copy(
+				tasksList = tasksList,
+				tasksLeft = tasksLeft
+			)
+		}
+
+		Log.d(TAG, tasksList.toString())
 	}
 }
