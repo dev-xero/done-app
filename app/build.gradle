@@ -12,7 +12,7 @@ android {
         minSdk 24
         targetSdk 33
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -61,7 +61,5 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
-
-    // Swipe
     implementation "me.saket.swipe:swipe:1.0.0"
 }
