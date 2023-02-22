@@ -35,6 +35,7 @@ import dev.xero.doneapp.ui.AppViewModel
 import dev.xero.doneapp.ui.theme.*
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
+import java.util.*
 
 class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -343,8 +344,6 @@ private fun TaskItemComposable(
 				modifier = Modifier
 					.fillMaxWidth()
 					.background(color = accent_1)
-					.padding(vertical = 8.dp),
-				verticalAlignment = Alignment.CenterVertically
 			) {
 				var checkState = task.checked
 
@@ -359,11 +358,9 @@ private fun TaskItemComposable(
 						uncheckedColor = accent_2,
 						checkmarkColor = onSurface
 					),
-					modifier = Modifier.padding(
-						start = 8.dp,
-						top = 8.dp,
-						bottom = 8.dp
-					)
+					modifier = Modifier
+						.wrapContentWidth()
+						.wrapContentHeight()
 				)
 
 				Text(
@@ -371,14 +368,15 @@ private fun TaskItemComposable(
 					style = MaterialTheme.typography.body1,
 					color = if (checkState) accent_2 else onSurface,
 					fontSize = 16.sp,
-					modifier = Modifier.padding(
-						start = 2.dp,
-						end = 20.dp
-					),
 					textDecoration = if (checkState)
 						TextDecoration.LineThrough
 					else
-						TextDecoration.None
+						TextDecoration.None,
+					modifier = Modifier.padding(
+						top = 12.dp,
+						end = 12.dp,
+						bottom = 12.dp
+					)
 				)
 			}
 		}
@@ -393,5 +391,17 @@ private fun TaskItemComposable(
 private fun DoneAppPreview() {
 	DoneAppTheme {
 		DoneApp()
+	}
+}
+
+@Preview
+@Composable
+private fun TaskItemPreview() {
+	DoneAppTheme {
+		TaskItemComposable(task = TaskItem(
+			id = UUID.randomUUID(),
+			task = "lol hahahahhsdfkasfasfpas fasdfkaspdf asfdjkkdsa dak sdfpas fasfkaspldf asdfkasdfa skdfas asfdal;sjf asf",
+			checked = false
+		), viewModel = viewModel())
 	}
 }
